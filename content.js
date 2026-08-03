@@ -8,7 +8,7 @@
   const FOOD_KEYWORDS = ['曲奇饼', '曲奇', '饼干', '小甜饼', 'cookie', 'biscuit'];
   const BANNER_HINTS = ['cookie', 'consent', 'gdpr', 'modal', 'banner', 'dialog', 'notice', 'privacy', 'ccpa', 'cookie-banner', 'cookie-consent'];
 
-  const COOKIE_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="72" height="72">' +
+  const COOKIE_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="48" height="48">' +
     '<circle cx="32" cy="32" r="26" fill="#D89B5F" stroke="#A96E2F" stroke-width="3"/>' +
     '<circle cx="24" cy="24" r="3.2" fill="#5C3A1E"/>' +
     '<circle cx="40" cy="20" r="3" fill="#5C3A1E"/>' +
@@ -88,26 +88,31 @@
     return false;
   }
 
-  function dropCookie() {
+  function dropCookie(count) {
     try {
       var holder = document.createElement('div');
       holder.style.cssText = 'position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:2147483647;';
       var style = document.createElement('style');
-      style.textContent = '@keyframes cc-fall{0%{transform:translateY(0) rotate(0deg);opacity:1}75%{opacity:1}100%{transform:translateY(calc(100vh - 60px)) rotate(400deg);opacity:0}}';
-      var cookie = document.createElement('div');
-      cookie.style.cssText = 'position:absolute;top:-90px;left:' + Math.min(window.innerWidth - 90, Math.random() * (window.innerWidth - 90)) + 'px;animation:cc-fall 1.2s ease-in forwards;';
-      cookie.innerHTML = COOKIE_SVG;
+      style.textContent = '@keyframes cc-fall{0%{transform:translateY(0) rotate(0deg);opacity:1}75%{opacity:1}100%{transform:translateY(calc(100vh - 55px)) rotate(400deg);opacity:0}}';
       holder.appendChild(style);
-      holder.appendChild(cookie);
+      var maxDelay = 0;
+      for (var i = 0; i < count; i++) {
+        var delay = Math.round(Math.random() * 900);
+        if (delay > maxDelay) maxDelay = delay;
+        var cookie = document.createElement('div');
+        cookie.style.cssText = 'position:absolute;top:-60px;left:' + Math.min(window.innerWidth - 64, Math.random() * (window.innerWidth - 64)) + 'px;animation:cc-fall 1.2s ease-in ' + delay + 'ms forwards;';
+        cookie.innerHTML = COOKIE_SVG;
+        holder.appendChild(cookie);
+      }
       document.documentElement.appendChild(holder);
-      setTimeout(function () { holder.remove(); }, 1300);
+      setTimeout(function () { holder.remove(); }, 1300 + maxDelay + 200);
     } catch (e) {}
   }
 
-  function recordCookie() {
+  function recordCookie(amount) {
     try {
       chrome.storage.local.get({ total: 0 }, function (data) {
-        chrome.storage.local.set({ total: (data.total || 0) + 1 }, function () {});
+        chrome.storage.local.set({ total: (data.total || 0) + amount }, function () {});
       });
     } catch (e) {}
   }
@@ -115,9 +120,11 @@
   document.addEventListener('click', function (event) {
     var now = Date.now();
     if (now - lastDrop < 500) return;
-    if (!matchesAcceptButton(event.target) && !matchesFoodWord(event.target)) return;
+    var isAccept = matchesAcceptButton(event.target);
+    var isFood = !isAccept && matchesFoodWord(event.target);
+    if (!isAccept && !isFood) return;
     lastDrop = now;
-    dropCookie();
-    recordCookie();
+    dropCookie(isAccept ? 15 : 1);
+    recordCookie(isAccept ? 15 : 1);
   }, true);
 })();
