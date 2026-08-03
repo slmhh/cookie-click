@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Cookie Collector 测试页</title>
+  <style>
+    body { font-family: sans-serif; padding: 40px; }
+    .banner { position: fixed; bottom: 0; left: 0; right: 0; background: #333; color: #fff;
+              padding: 16px 24px; display: flex; gap: 12px; align-items: center; z-index: 10; }
+    button { padding: 8px 16px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>曲奇收集器测试页</h1>
+  <p>中文弹窗:点"接受全部 Cookie"应掉落曲奇;点"拒绝"不应掉落。</p>
+
+  <div class="banner" id="zh-banner">
+    <span>本网站使用 Cookie 为您提供更好的浏览体验。</span>
+    <button id="zh-accept">接受全部 Cookie</button>
+    <button id="zh-reject">拒绝</button>
+  </div>
+
+  <div class="banner" id="en-banner" style="bottom: 90px; display: none;">
+    <span>We use cookies to improve your experience.</span>
+    <button id="en-accept">Accept all</button>
+    <button id="en-decline">Decline</button>
+  </div>
+
+  <button id="dynamic">动态弹窗按钮(点击后出现英文横幅)</button>
+  <button id="good">好的</button>
+  <button id="biscuit">小甜饼</button>
+  <a href="#cookie-anchor" id="cookie-link">点击这条 cookie 链接</a>
+  <span id="biscuit-en">biscuits are nice</span>
+  <p id="long-paragraph">本段落包含"曲奇"二字,但文本总长超过 100 字符,点击它不应掉落曲奇。xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+
+  <script>
+    document.getElementById('en-accept').addEventListener('click', function () {
+      document.getElementById('en-banner').style.display = 'none';
+    });
+    document.getElementById('zh-accept').addEventListener('click', function () {
+      document.getElementById('zh-banner').style.display = 'none';
+    });
+    document.getElementById('dynamic').addEventListener('click', function () {
+      var b = document.getElementById('en-banner');
+      b.style.display = 'flex';
+      b.style.bottom = '150px';
+    });
+  </script>
+</body>
+</html>
