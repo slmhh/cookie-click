@@ -1,5 +1,9 @@
 # 曲奇收集器 Cookie Collector
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![github: slmhh](https://img.shields.io/badge/github-repo-blue?logo=github)](https://github.com/slmhh/CodeReplay)
+
+现已上架[Edge扩展商店](https://microsoftedge.microsoft.com/addons/detail/%E6%9B%B2%E5%A5%87%E6%94%B6%E9%9B%86%E5%99%A8-cookie-collector/gacmjdenigcnkkimdonfbjpdadobdfmi)。
+
 一个 Microsoft Edge 扩展(Manifest V3):每次接受网站的 Cookie,就掉落一块曲奇;点击页面上含"曲奇 / cookie / 饼干"等字样的文字,也能收获曲奇。收集起来,在弹窗里吃掉它们!
 
 ## 功能
@@ -14,7 +18,12 @@
 1. 打开 `edge://extensions`
 2. 开启左下角"开发人员模式"
 3. 点击"加载解压缩的扩展",选择本项目目录 `cookie click`
-4. (测试本地文件时)在该扩展卡片上开启"允许访问文件网址"
+
+## 权限说明
+
+- 仅申请 `storage` 权限:用于在本地保存曲奇计数(`chrome.storage.local`,不联网、不上传)
+- 内容脚本仅在 `http://` 和 `https://` 网页上运行,不访问本地文件或其他协议页面
+- 扩展不收集任何个人数据
 
 ## 使用
 
@@ -24,7 +33,13 @@
 
 ## 测试
 
-打开 `test/test-page.html`(需已开启"允许访问文件网址",或用本地 http 服务器访问),包含:
+用本地 http 服务器访问 `test/test-page.html`(脚本仅在 http/https 页面运行,直接双击打开 file:// 无效)。例如在项目根目录运行:
+
+```
+python -m http.server 8000
+```
+
+然后浏览器打开 `http://localhost:8000/test/test-page.html`。测试页包含:
 
 - 中英文 Cookie 弹窗(接受 / 拒绝)
 - 动态出现的英文弹窗
